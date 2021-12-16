@@ -3,6 +3,7 @@ const gameboard = {
 }
 
 const controller = (()=>{
+    const displayContainer = document.querySelector(".displayContainer")
 
     const createNewDiv = (rowIndex) => {
         const newDiv = document.createElement("div")
@@ -38,9 +39,11 @@ const controller = (()=>{
             let row = array.slice(i,i+3)
             let column = [array[i],array[i+3],array[i+6]]
             if(row.every(e=>e==="X") || column.every(e=>e==="X")){
+                displayContainer.textContent = "p2 wins!"
                 return console.log("tim wins")
             }
             else if(row.every(e=>e==="O") || column.every(e=>e==="O")){
+                displayContainer.textContent = "p1 wins!"
                 return console.log("jim wins")
             }
         }
@@ -49,11 +52,17 @@ const controller = (()=>{
         let diag2 = [array[2],array[4],array[6]]
         console.log("diag1", diag1, "diag2", diag2)
         if(diag1.every(e=>e==="X") || diag2.every(e=>e==="X")){
+            displayContainer.textContent = "p2 wins!"
             return console.log("tim wins")
         }
         else if(diag1.every(e=>e==="O") || diag2.every(e=>e==="O")){
-            console.log("jim wins")
+            displayContainer.textContent = "p1 wins!"
             return console.log("jim wins")
+        }
+        // check diagonals for draw
+        if(array.includes("E")===false){
+            displayContainer.textContent = "draw!"
+            return console.log("draw")
         }
     }
     
