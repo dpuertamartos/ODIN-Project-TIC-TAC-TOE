@@ -67,7 +67,8 @@ const controller = (()=>{
     }
     
     // Create Board
-    const createBoard = () => {
+    const createBoard = (jim, tim) => {
+        //Need to add to destroy board first
         gameDiv = document.querySelector(".boardContainer")
         gameboard.state.map(row=>{
         const rowIndex = gameboard.state.indexOf(row)
@@ -91,8 +92,22 @@ const controller = (()=>{
             console.log(square)
         }))
     }
+
+    const startGame = () => {
+        const p1= document.querySelector("#name1")
+        const p2 = document.querySelector("#name2")
+        console.log(p1.value, p2.value)
+        const jim = Player(p1.value, 1)
+        const tim = Player(p2.value, 2)
+        jim.isTurn=true
+        console.log(jim)
+        console.log(tim)
+        controller.createBoard(jim, tim)
+    }
+
+    
     return {
-        createBoard
+        createBoard, startGame
     }
 
 })();
@@ -100,6 +115,7 @@ const controller = (()=>{
 const Player = (name, id1) => {
     let isTurn = false
     let id = id1
+    const sayName = () => name
     const changeTurn = () => isTurn = !isTurn
     const createMark = (span) =>{
         console.log(span.textContent, "id", id)
@@ -107,12 +123,15 @@ const Player = (name, id1) => {
         else if(id===1){span.textContent="O"}
         else{span.textContent="X"}
     }
-    return {isTurn, changeTurn, createMark}
+    return {isTurn, changeTurn, createMark, sayName}
 }
 
 
-controller.createBoard()
-const jim = Player("jim", 1)
-const tim = Player("tim", 2)
-jim.isTurn=true
+
+
+const start = document.querySelector(".startButton")
+start.addEventListener("click", ()=>{
+    controller.startGame()
+})
+
 console.log(gameboard.state)
