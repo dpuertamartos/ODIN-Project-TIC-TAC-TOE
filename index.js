@@ -66,10 +66,22 @@ const controller = (()=>{
         }
     }
     
+    const destroyGrid = () => {
+        const container = document.querySelector(".boardContainer")
+        const body = document.querySelector("body")
+        body.removeChild(container)
+        const newContainer = document.createElement("div")
+        newContainer.className = "boardContainer"
+        body.insertBefore(newContainer, body.firstChild)
+    }
+
     // Create Board
     const createBoard = (jim, tim) => {
         //Need to add to destroy board first
+        destroyGrid()
         gameDiv = document.querySelector(".boardContainer")
+        gameDivNew = document.createElement("div")
+        gameDiv.par
         gameboard.state.map(row=>{
         const rowIndex = gameboard.state.indexOf(row)
         const newRowDiv = createNewRow(row, rowIndex)
