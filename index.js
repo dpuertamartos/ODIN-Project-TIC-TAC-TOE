@@ -1,5 +1,6 @@
 const gameboard = {
     state: [["E", "E", "E"],["E", "E", "E"],["E", "E", "E"]],
+    aiMode: true
 }
 
 const controller = (()=>{
@@ -115,6 +116,9 @@ const controller = (()=>{
         const p1= document.querySelector("#name1")
         const p2 = document.querySelector("#name2")
         console.log(p1.value, p2.value)
+        if (gameboard.aiMode === true){
+            p1.value = "AI"
+        }
         const jim = Player(p1.value, 1)
         const tim = Player(p2.value, 2)
         jim.isTurn=true
@@ -152,12 +156,26 @@ const Player = (name, id1) => {
     return {isTurn, changeTurn, createMark, sayName}
 }
 
+// ai select random empty square and clicks
+
+
+const ai = (() => {
+    const random = () => {
+        let squares = document.querySelectorAll(".square")
+        squares = Array.from(squares)
+        squares = squares.filter(square => square.textContent === "E")
+        const randomIndex = Math.floor(Math.random()*squares.length)
+        squares[randomIndex].click()
+    }
+    return {random}
+})();
 
 
 
 const start = document.querySelector(".startButton")
 start.addEventListener("click", ()=>{
     controller.startGame()
+    ai.random()
 })
 
 console.log(gameboard.state)
