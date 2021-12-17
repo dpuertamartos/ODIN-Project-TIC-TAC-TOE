@@ -1,6 +1,8 @@
 const gameboard = {
     state: [["E", "E", "E"],["E", "E", "E"],["E", "E", "E"]],
-    aiMode: true
+    aiMode: true,
+    aiTurn: true,
+    winner: ""
 }
 
 const controller = (()=>{
@@ -41,10 +43,12 @@ const controller = (()=>{
             let column = [array[i],array[i+3],array[i+6]]
             if(row.every(e=>e==="X") || column.every(e=>e==="X")){
                 displayContainer.textContent = `${p2.sayName()} wins!`
+                gameboard.winner = displayContainer.textContent
                 return console.log(`${p2.sayName()} wins!`)
             }
             else if(row.every(e=>e==="O") || column.every(e=>e==="O")){
                 displayContainer.textContent = `${p1.sayName()} wins!`
+                gameboard.winner = displayContainer.textContent
                 return console.log(`${p1.sayName()} wins!`)
             }
         }
@@ -54,15 +58,18 @@ const controller = (()=>{
         console.log("diag1", diag1, "diag2", diag2)
         if(diag1.every(e=>e==="X") || diag2.every(e=>e==="X")){
             displayContainer.textContent = `${p2.sayName()} wins!`
+            gameboard.winner = displayContainer.textContent
             return console.log(`${p2.sayName()} wins!`)
         }
         else if(diag1.every(e=>e==="O") || diag2.every(e=>e==="O")){
             displayContainer.textContent = `${p1.sayName()} wins!`
+            gameboard.winner = displayContainer.textContent
             return console.log(`${p1.sayName()} wins!`)
         }
         // check diagonals for draw
         if(array.includes("E")===false){
             displayContainer.textContent = "draw!"
+            gameboard.winner = displayContainer.textContent
             return console.log("draw")
         }
     }
@@ -82,7 +89,9 @@ const controller = (()=>{
         if(isMarkCreated){
             jim.isTurn = !jim.isTurn
             tim.isTurn = !tim.isTurn
+            gameboard.aiTurn = !gameboard.aiTurn
             gameChecker(jim,tim)
+            ai.random()
         }
     }
 
@@ -100,6 +109,7 @@ const controller = (()=>{
         })
         squares = document.querySelectorAll(".square")
         squares.forEach(square=>square.addEventListener("click", ()=>{
+            if(gameboard.aiTurn === true){console.log("ai play")}
             if(jim.isTurn){
                 const markCreated = jim.createMark(square)
                 passTurn(markCreated, jim, tim)
@@ -161,12 +171,17 @@ const Player = (name, id1) => {
 
 const ai = (() => {
     const random = () => {
-        let squares = document.querySelectorAll(".square")
-        squares = Array.from(squares)
-        squares = squares.filter(square => square.textContent === "E")
-        const randomIndex = Math.floor(Math.random()*squares.length)
-        squares[randomIndex].click()
+        if(gameboard.aiTurn === true && gameboard.winner.length < 1 ){
+            let squares = document.querySelectorAll(".square")
+            squares = Array.from(squares)
+            squares = squares.filter(square => square.textContent === "E")
+            const randomIndex = Math.floor(Math.random()*squares.length)
+            squares[randomIndex].click("AI")
+            gameboard.aiTurn = false
+        }
     }
+
+    const brained = () => {return ;}
     return {random}
 })();
 
