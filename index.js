@@ -29,7 +29,7 @@ const controller = (()=>{
         return newRowDiv
     }
     
-    const gameChecker = () => {
+    const gameChecker = (p1,p2) => {
         squares = document.querySelectorAll(".square")
         let array = []
         squares.forEach(square => array = array.concat(square.textContent))
@@ -39,12 +39,12 @@ const controller = (()=>{
             let row = array.slice(i,i+3)
             let column = [array[i],array[i+3],array[i+6]]
             if(row.every(e=>e==="X") || column.every(e=>e==="X")){
-                displayContainer.textContent = "p2 wins!"
-                return console.log("tim wins")
+                displayContainer.textContent = `${p2.sayName()} wins!`
+                return console.log(`${p2.sayName()} wins!`)
             }
             else if(row.every(e=>e==="O") || column.every(e=>e==="O")){
-                displayContainer.textContent = "p1 wins!"
-                return console.log("jim wins")
+                displayContainer.textContent = `${p1.sayName()} wins!`
+                return console.log(`${p1.sayName()} wins!`)
             }
         }
         // then check diagonals
@@ -52,12 +52,12 @@ const controller = (()=>{
         let diag2 = [array[2],array[4],array[6]]
         console.log("diag1", diag1, "diag2", diag2)
         if(diag1.every(e=>e==="X") || diag2.every(e=>e==="X")){
-            displayContainer.textContent = "p2 wins!"
-            return console.log("tim wins")
+            displayContainer.textContent = `${p2.sayName()} wins!`
+            return console.log(`${p2.sayName()} wins!`)
         }
         else if(diag1.every(e=>e==="O") || diag2.every(e=>e==="O")){
-            displayContainer.textContent = "p1 wins!"
-            return console.log("jim wins")
+            displayContainer.textContent = `${p1.sayName()} wins!`
+            return console.log(`${p1.sayName()} wins!`)
         }
         // check diagonals for draw
         if(array.includes("E")===false){
@@ -72,7 +72,17 @@ const controller = (()=>{
         body.removeChild(container)
         const newContainer = document.createElement("div")
         newContainer.className = "boardContainer"
-        body.insertBefore(newContainer, body.firstChild)
+        const cContainer = document.querySelector(".controllersContainer")
+        body.insertBefore(newContainer, cContainer)
+    }
+
+    // Passes turn if mark is created
+    const passTurn = (isMarkCreated, jim, tim) => {
+        if(isMarkCreated){
+            jim.isTurn = !jim.isTurn
+            tim.isTurn = !tim.isTurn
+            gameChecker(jim,tim)
+        }
     }
 
     // Create Board
@@ -90,16 +100,12 @@ const controller = (()=>{
         squares = document.querySelectorAll(".square")
         squares.forEach(square=>square.addEventListener("click", ()=>{
             if(jim.isTurn){
-                jim.createMark(square)
-                jim.isTurn = !jim.isTurn
-                tim.isTurn = !tim.isTurn
-                gameChecker()
+                const markCreated = jim.createMark(square)
+                passTurn(markCreated, jim, tim)
             }
             else{
-                tim.createMark(square)
-                jim.isTurn = !jim.isTurn
-                tim.isTurn = !tim.isTurn
-                gameChecker()
+                const markCreated = tim.createMark(square)
+                passTurn(markCreated, jim, tim)
             }
             console.log(square)
         }))
@@ -131,9 +137,17 @@ const Player = (name, id1) => {
     const changeTurn = () => isTurn = !isTurn
     const createMark = (span) =>{
         console.log(span.textContent, "id", id)
-        if(span.textContent!="E"){return ;}
-        else if(id===1){span.textContent="O"}
-        else{span.textContent="X"}
+        if(span.textContent!="E"){
+            return false
+        }
+        else if(id===1){
+            span.textContent="O" 
+            return true
+        }
+        else{
+            span.textContent="X"
+            return true
+        }
     }
     return {isTurn, changeTurn, createMark, sayName}
 }
