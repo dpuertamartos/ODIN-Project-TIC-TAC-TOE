@@ -20,6 +20,25 @@
     <button class="btn startButton">Start/Restart game</button>
     <button class="btn boardState">Board State</button>
     <button class="btn bestMove">Find Best Move</button>
+    <div>
+      <p>Select game mode:</p>
+
+      <div>
+        <input type="radio" id="pvp" name="mode" value="pvp"
+              checked>
+        <label for="pvp">Player vs Player</label>
+      </div>
+
+      <div>
+        <input type="radio" id="dumb" name="mode" value="dumb">
+        <label for="dumb">Dumb AI</label>
+      </div>
+
+      <div>
+        <input type="radio" id="god" name="mode" value="god">
+        <label for="god">God AI</label>
+      </div>
+    </div>
     
   </div>
   <script src="index.js">

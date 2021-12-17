@@ -1,6 +1,6 @@
 const gameboard = {
     state: [["E", "E", "E"],["E", "E", "E"],["E", "E", "E"]],
-    aiMode: true,
+    mode: "pvp",
     aiTurn: true,
     winner: "",
     aiInvencible: true,
@@ -55,18 +55,32 @@ const controller = (()=>{
         // first check horizontals and verticals
         for(let i=0; i<array.length;i=i+3){
             let row = array.slice(i,i+3)
-            let column = [array[i],array[i+3],array[i+6]]
-            if(row.every(e=>e==="X") || column.every(e=>e==="X")){
+            if(row.every(e=>e==="X")){
                 displayContainer.textContent = `${p2.sayName()} wins!`
                 gameboard.winner = displayContainer.textContent
                 return console.log(`${p2.sayName()} wins!`)
             }
-            else if(row.every(e=>e==="O") || column.every(e=>e==="O")){
+            else if(row.every(e=>e==="O")){
                 displayContainer.textContent = `${p1.sayName()} wins!`
                 gameboard.winner = displayContainer.textContent
                 return console.log(`${p1.sayName()} wins!`)
             }
         }
+        // then check verticals 
+        for(let i=0; i<3;i++){
+            let column = [array[i],array[i+3],array[i+6]]
+            if(column.every(e=>e==="X")){
+                displayContainer.textContent = `${p2.sayName()} wins!`
+                gameboard.winner = displayContainer.textContent
+                return console.log(`${p2.sayName()} wins!`)
+            }
+            else if(column.every(e=>e==="O")){
+                displayContainer.textContent = `${p1.sayName()} wins!`
+                gameboard.winner = displayContainer.textContent
+                return console.log(`${p1.sayName()} wins!`)
+            }
+        }
+
         // then check diagonals
         let diag1 = [array[0],array[4],array[8]]
         let diag2 = [array[2],array[4],array[6]]
@@ -104,9 +118,15 @@ const controller = (()=>{
         if(isMarkCreated){
             jim.isTurn = !jim.isTurn
             tim.isTurn = !tim.isTurn
-            gameboard.aiTurn = !gameboard.aiTurn
             gameChecker(jim,tim)
-            ai.playBestMove()
+            if(gameboard.mode==="god"){
+                gameboard.aiTurn = !gameboard.aiTurn
+                ai.playBestMove()
+            }
+            if(gameboard.mode==="dumb"){
+                gameboard.aiTurn = !gameboard.aiTurn
+                ai.random()
+            }
         }
     }
 
@@ -141,7 +161,7 @@ const controller = (()=>{
         const p1= document.querySelector("#name1")
         const p2 = document.querySelector("#name2")
         console.log(p1.value, p2.value)
-        if (gameboard.aiMode === true){
+        if (gameboard.mode != "pvp"){
             p1.value = "AI"
         }
         const jim = Player(p1.value, 1)
@@ -424,6 +444,7 @@ const ai = (() => {
             gameboard.aiTurn = false
         }
     }
+
     return {random, findBestMove, playBestMove}
 })();
 
@@ -431,8 +452,18 @@ const ai = (() => {
 
 const start = document.querySelector(".startButton")
 start.addEventListener("click", ()=>{
-    controller.startGame()
-    ai.playBestMove()
+    gameboard.mode = document.querySelector('input[name="mode"]:checked').value;
+    if(gameboard.mode === "pvp"){
+        controller.startGame()
+    }
+    else if (gameboard.mode === "god"){
+        controller.startGame()
+        ai.playBestMove()
+    }
+    else{
+        controller.startGame()
+        ai.random()
+    }
 })
 
 const boardState = document.querySelector(".boardState")
