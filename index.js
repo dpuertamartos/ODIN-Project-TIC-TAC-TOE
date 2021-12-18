@@ -2,6 +2,8 @@ const gameboard = {
     state: [["E", "E", "E"],["E", "E", "E"],["E", "E", "E"]],
     initialState: [["E", "E", "E"],["E", "E", "E"],["E", "E", "E"]],
     mode: "pvp",
+    p1Mode: "pvp",
+    p2Mode: "pvp",
     aiTurn: true,
     winner: ""
 }
@@ -119,13 +121,40 @@ const controller = (()=>{
             jim.isTurn = !jim.isTurn
             tim.isTurn = !tim.isTurn
             gameChecker(jim,tim)
-            if(gameboard.mode==="god"){
-                gameboard.aiTurn = !gameboard.aiTurn
-                ai.playBestMove()
-            }
-            if(gameboard.mode==="dumb"){
-                gameboard.aiTurn = !gameboard.aiTurn
-                ai.random()
+            console.log("p1 turn", jim.isTurn)
+            switch(jim.isTurn){
+                case true:
+                    console.log("inside true")
+                    switch(gameboard.p1Mode){
+                        case "god":
+                            console.log("inside god")
+                            gameboard.aiTurn = true
+                            ai.playBestMove()
+                            break;
+                        case "dumb":
+                            console.log("inside dumb")
+                            gameboard.aiTurn = true
+                            ai.random()
+                            break;
+                        default: break; 
+                    }
+                    break;
+                case false:
+                    console.log("inside false")
+                    switch(gameboard.p2Mode){
+                        case "god":
+                            console.log("inside god2")
+                            gameboard.aiTurn = true
+                            ai.playBestMove()
+                            break;
+                        case "dumb":
+                            console.log("inside dumb2")
+                            gameboard.aiTurn = true
+                            ai.random()
+                            break;
+                        default: break; 
+                    }
+                    break;
             }
         }
     }
@@ -161,21 +190,24 @@ const controller = (()=>{
         gameboard.winner=""
         const p1= document.querySelector("#name1")
         const p2 = document.querySelector("#name2")
-        if (gameboard.mode != "pvp"){
-            p1.value = "AI"
+        if (gameboard.p1Mode != "pvp"){
+            p1.value = gameboard.p1Mode + " AI 1"
+        }
+        if(gameboard.p2Mode != "pvp"){
+            p2.value = gameboard.p2Mode + " AI 2"
         }
         jim = Player(p1.value, 1)
         tim = Player(p2.value, 2)
         jim.isTurn=true
         tim.isTurn=false
-        gameboard.aiTurn=true
         controller.createBoard(jim, tim)
-        console.log(gameboard.mode)
-        if (gameboard.mode === "god"){
-            console.log("god mode selected")
+        console.log(gameboard.p1Mode, " vs ",gameboard.p2Mode)
+        if (gameboard.p1Mode === "god"){
+            gameboard.aiTurn=true
             ai.playBestMove()
         }
-        else if(gameboard.mode ==="dumb"){
+        else if(gameboard.p1Mode ==="dumb"){
+            gameboard.aiTurn=true
             ai.random()
         }
     }
@@ -233,7 +265,7 @@ const ai = (() => {
     }
      
     let player = 'O', opponent = 'X';
-     
+
     // This function returns true if there are moves
     // remaining on the board. It returns false if
     // there are no moves left to play.
@@ -440,6 +472,14 @@ const ai = (() => {
     }
 
     playBestMove = () => {
+        if(jim.isTurn){
+            player="O"
+            opponent="X"
+        }
+        else{
+            player="X"
+            opponent="O"
+        }    
         let board = controller.createGameBoardState()
         const moveToPlay = findBestMove(board)
         console.log("board", board, "move to play", moveToPlay)
@@ -459,7 +499,8 @@ const ai = (() => {
 const start = document.querySelector(".startButton")
 start.addEventListener("click", ()=>{
     console.log("restart")
-    gameboard.mode = document.querySelector('input[name="mode"]:checked').value;
+    gameboard.p1Mode = document.querySelector('input[name="mode1"]:checked').value;
+    gameboard.p2Mode = document.querySelector('input[name="mode2"]:checked').value;
     controller.startGame()
 })
 
