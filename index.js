@@ -1,10 +1,13 @@
 const gameboard = {
     state: [["E", "E", "E"],["E", "E", "E"],["E", "E", "E"]],
+    initialState: [["E", "E", "E"],["E", "E", "E"],["E", "E", "E"]],
     mode: "pvp",
     aiTurn: true,
-    winner: "",
-    aiInvencible: true,
+    winner: ""
 }
+
+let tim;
+let jim;
 
 const controller = (()=>{
     const displayContainer = document.querySelector(".displayContainer")
@@ -43,7 +46,6 @@ const controller = (()=>{
             newState.push(row)
         }
         gameboard.state= newState
-        console.log(gameboard.state)
         return gameboard.state
     }
 
@@ -51,7 +53,6 @@ const controller = (()=>{
         squares = document.querySelectorAll(".square")
         let array = []
         squares.forEach(square => array = array.concat(square.textContent))
-        console.log(array)
         // first check horizontals and verticals
         for(let i=0; i<array.length;i=i+3){
             let row = array.slice(i,i+3)
@@ -84,7 +85,6 @@ const controller = (()=>{
         // then check diagonals
         let diag1 = [array[0],array[4],array[8]]
         let diag2 = [array[2],array[4],array[6]]
-        console.log("diag1", diag1, "diag2", diag2)
         if(diag1.every(e=>e==="X") || diag2.every(e=>e==="X")){
             displayContainer.textContent = `${p2.sayName()} wins!`
             gameboard.winner = displayContainer.textContent
@@ -136,7 +136,7 @@ const controller = (()=>{
         destroyGrid()
         gameDiv = document.querySelector(".boardContainer")
         gameDivNew = document.createElement("div")
-        gameDiv.par
+        gameboard.state=gameboard.initialState
         gameboard.state.map(row=>{
         const rowIndex = gameboard.state.indexOf(row)
         const newRowDiv = createNewRow(row, rowIndex)
@@ -153,23 +153,28 @@ const controller = (()=>{
                 const markCreated = tim.createMark(square)
                 passTurn(markCreated, jim, tim)
             }
-            console.log(square)
         }))
     }
 
     const startGame = () => {
         const p1= document.querySelector("#name1")
         const p2 = document.querySelector("#name2")
-        console.log(p1.value, p2.value)
         if (gameboard.mode != "pvp"){
             p1.value = "AI"
         }
-        const jim = Player(p1.value, 1)
-        const tim = Player(p2.value, 2)
+        jim = Player(p1.value, 1)
+        tim = Player(p2.value, 2)
         jim.isTurn=true
-        console.log(jim)
-        console.log(tim)
+        tim.isTurn=false
         controller.createBoard(jim, tim)
+        console.log(gameboard.mode)
+        if (gameboard.mode === "god"){
+            console.log("god mode selected")
+            ai.playBestMove()
+        }
+        else if(gameboard.mode ==="dumb"){
+            ai.random()
+        }
     }
 
     
@@ -179,13 +184,13 @@ const controller = (()=>{
 
 })();
 
-const Player = (name, id1) => {
+const Player = (name1, id1) => {
     let isTurn = false
     let id = id1
-    const sayName = () => name
+    let name = name1
+    const sayName = () => name1
     const changeTurn = () => isTurn = !isTurn
     const createMark = (span) =>{
-        console.log(span.textContent, "id", id)
         if(span.textContent!="E"){
             return false
         }
@@ -198,7 +203,7 @@ const Player = (name, id1) => {
             return true
         }
     }
-    return {isTurn, changeTurn, createMark, sayName}
+    return {isTurn, name, changeTurn, createMark, sayName}
 }
 
 // ai select random empty square and clicks
@@ -433,14 +438,12 @@ const ai = (() => {
 
     playBestMove = () => {
         let board = controller.createGameBoardState()
-        console.log(board)
         const moveToPlay = findBestMove(board)
-        console.log(moveToPlay)
+        console.log("board", board, "move to play", moveToPlay)
         if(gameboard.aiTurn === true && gameboard.winner.length < 1 ){
-            console.log(moveToPlay, moveToPlay.row, moveToPlay.col, typeof moveToPlay.col)
             let square = document.querySelector(`[row="${moveToPlay.row}"][column="${moveToPlay.col}"]`)
-            console.log(square, "AI PLAY")
-            square.click("AI")
+            console.log(square, "AI PLAYED")
+            square.click()
             gameboard.aiTurn = false
         }
     }
@@ -452,18 +455,9 @@ const ai = (() => {
 
 const start = document.querySelector(".startButton")
 start.addEventListener("click", ()=>{
+    console.log("restart")
     gameboard.mode = document.querySelector('input[name="mode"]:checked').value;
-    if(gameboard.mode === "pvp"){
-        controller.startGame()
-    }
-    else if (gameboard.mode === "god"){
-        controller.startGame()
-        ai.playBestMove()
-    }
-    else{
-        controller.startGame()
-        ai.random()
-    }
+    controller.startGame()
 })
 
 const boardState = document.querySelector(".boardState")
