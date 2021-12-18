@@ -504,14 +504,12 @@ start.addEventListener("click", ()=>{
     controller.startGame()
 })
 
-const boardState = document.querySelector(".boardState")
-boardState.addEventListener("click", ()=>{
-    controller.createGameBoardState()
-})
-
 const bestMove = document.querySelector(".bestMove")
 bestMove.addEventListener("click", ()=>{
-    console.log(ai.findBestMove(controller.createGameBoardState()))
+    const moveCheated = ai.findBestMove(controller.createGameBoardState())
+    const cheatDisplay = document.querySelector(".cheatDisplay")
+    cheatDisplay.textContent = `Play row ${moveCheated.row+1} column ${moveCheated.col+1}`
+    console.log(moveCheated)
 })
 
 console.log(gameboard.state)
