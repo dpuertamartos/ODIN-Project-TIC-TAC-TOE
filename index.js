@@ -157,6 +157,8 @@ const controller = (()=>{
     }
 
     const startGame = () => {
+        displayContainer.textContent=""
+        gameboard.winner=""
         const p1= document.querySelector("#name1")
         const p2 = document.querySelector("#name2")
         if (gameboard.mode != "pvp"){
@@ -166,6 +168,7 @@ const controller = (()=>{
         tim = Player(p2.value, 2)
         jim.isTurn=true
         tim.isTurn=false
+        gameboard.aiTurn=true
         controller.createBoard(jim, tim)
         console.log(gameboard.mode)
         if (gameboard.mode === "god"){
