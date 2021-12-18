@@ -1,7 +1,21 @@
 .controllersContainer{
     padding: 5% 2%;
+    font-size: 1.6rem;
+}
+
+.controller{
+    padding: 8% 2% 0%;
 }
 
 .cheatDisplay{
     color: red;
+}
+
+.btn{
+    width: 12rem;
+    font-size: 1.4rem;
+}
+
+.startButton{
+    width: 16rem;
 }
