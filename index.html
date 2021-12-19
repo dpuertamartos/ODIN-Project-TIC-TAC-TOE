@@ -6,78 +6,74 @@
   <meta charset="UTF-8"/>
 </head>
 <body>
-  <div class="displayContainer">
+  <div class="displayContainer container">
+  </div>
+  <div class="main container">
+    <div class="boardDisplay container">
+      <div class="row">
+        <div class="col top left"><img row=0 col=0 class="img-fluid square" src=circle.png></div>
+        <div class="col top center"><img row=0 col=1 class="img-fluid square" src=circle.png></div>
+        <div class="col top right"><img row=0 col=2 class="img-fluid square" src=cross.png></div>
+      </div>
+      <div class="row">
+        <div class="col mid left"><img row=1 col=0 class="img-fluid square" src=circle.png></div>
+        <div class="col mid center"><img row=1 col=1 class="img-fluid square" src=blank.png></div>
+        <div class="col mid right"><img row=1 col=2 class="img-fluid square" src=cross.png></div>
+      </div>
+      <div class="row">
+        <div class="col bot left"><img row=2 col=0 class="img-fluid square" src=blank.png></div>
+        <div class="col bot center"><img row=2 col=1 class="img-fluid square" src=cross.png></div>
+        <div class="col bot right"><img row=2 col=2 class="img-fluid square" src=blank.png></div>
+      </div>
+    </div>
+    <div class="row controllersContainer">
+      <div class="col container controller">
+        <label for="name1">Player 1 name: </label>
+        <input type="text" id="name1" name="name1">
+        <div>
+          <input type="radio" id="pvp1" name="mode1" value="pvp"
+                checked>
+          <label for="pvp1">Player</label>
+        </div>
+  
+        <div>
+          <input type="radio" id="dumb1" name="mode1" value="dumb">
+          <label for="dumb1">Dumb AI</label>
+        </div>
+  
+        <div>
+          <input type="radio" id="god1" name="mode1" value="god">
+          <label for="god1">God AI</label>
+        </div>
+      </div>
+      <div class="col container controller">
+        <label for="name2">Player 2 name:</label>
+        <input type="text" id="name2" name="name2">
+        <div>
+          <input type="radio" id="pvp2" name="mode2" value="pvp"
+                checked>
+          <label for="pvp2">Player</label>
+        </div>
     
+        <div>
+          <input type="radio" id="dumb2" name="mode2" value="dumb">
+          <label for="dumb2">Dumb AI</label>
+        </div>
+    
+        <div>
+          <input type="radio" id="god2" name="mode2" value="god">
+          <label for="god2">God AI</label>
+        </div>
+      </div>
+      <div class="col container-fluid controller">
+        <button class="btn btn-dark startButton">Start/Restart game</button>
+        <button class="btn btn-danger bestMove">Use cheats</button>
+        <div class="cheatDisplay"></div>
+      </div>
+    </div>
+
+
   </div>
-  <br><br>
-  <div class="boardDisplay container">
-    <div class="row">
-      <div class="col top left"><img row=0 col=0 class="img-fluid square" src=circle.png></div>
-      <div class="col top center"><img row=0 col=1 class="img-fluid square" src=circle.png></div>
-      <div class="col top right"><img row=0 col=2 class="img-fluid square" src=cross.png></div>
-    </div>
-    <div class="row">
-      <div class="col mid left"><img row=1 col=0 class="img-fluid square" src=circle.png></div>
-      <div class="col mid center"><img row=1 col=1 class="img-fluid square" src=blank.png></div>
-      <div class="col mid right"><img row=1 col=2 class="img-fluid square" src=cross.png></div>
-    </div>
-    <div class="row">
-      <div class="col bot left"><img row=2 col=0 class="img-fluid square" src=blank.png></div>
-      <div class="col bot center"><img row=2 col=1 class="img-fluid square" src=cross.png></div>
-      <div class="col bot right"><img row=2 col=2 class="img-fluid square" src=blank.png></div>
-    </div>
-  </div>
-  <div class="boardContainer">
-  </div>  
-  <div class="row controllersContainer">
-    <div class="col container controller">
-      <label for="name1">Player 1 name: </label>
-      <input type="text" id="name1" name="name1">
-      <div>
-        <input type="radio" id="pvp1" name="mode1" value="pvp"
-              checked>
-        <label for="pvp1">Player</label>
-      </div>
-
-      <div>
-        <input type="radio" id="dumb1" name="mode1" value="dumb">
-        <label for="dumb1">Dumb AI</label>
-      </div>
-
-      <div>
-        <input type="radio" id="god1" name="mode1" value="god">
-        <label for="god1">God AI</label>
-      </div>
-      
-
-    </div>
-    <div class="col container controller">
-      <label for="name2">Player 2 name:</label>
-      <input type="text" id="name2" name="name2">
-      <div>
-        <input type="radio" id="pvp2" name="mode2" value="pvp"
-              checked>
-        <label for="pvp2">Player</label>
-      </div>
-  
-      <div>
-        <input type="radio" id="dumb2" name="mode2" value="dumb">
-        <label for="dumb2">Dumb AI</label>
-      </div>
-  
-      <div>
-        <input type="radio" id="god2" name="mode2" value="god">
-        <label for="god2">God AI</label>
-      </div>
-    </div>
-   
-    </div>
-    <br>
-    <div class="container-fluid">
-      <div class="cheatDisplay"></div>
-      <button class="btn btn-dark startButton">Start/Restart game</button>
-      <button class="btn btn-danger bestMove">Use cheats</button>
-    </div>
   <script src="index.js">
   </script>
 </body>

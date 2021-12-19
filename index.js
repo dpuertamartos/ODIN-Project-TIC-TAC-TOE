@@ -14,12 +14,6 @@ let jim;
 
 const controller = (()=>{
     const displayContainer = document.querySelector(".displayContainer")
-
-    const createNewDiv = (rowIndex) => {
-        const newDiv = document.createElement("div")
-        newDiv.setAttribute("index", rowIndex)
-        return newDiv
-    }
     
     const createGameBoardState = () => {
         squares = document.querySelectorAll(".square")
@@ -62,28 +56,28 @@ const controller = (()=>{
         for(let i=0; i<array.length;i=i+3){
             let row = array.slice(i,i+3)
             if(row.every(e=>e==="X")){
-                displayContainer.textContent = `${p2.sayName()} wins!`
+                displayContainer.textContent = `${tim.name} wins!`
                 gameboard.winner = displayContainer.textContent
-                return console.log(`${p2.sayName()} wins!`)
+                return console.log(`${tim.name} wins!`)
             }
             else if(row.every(e=>e==="O")){
-                displayContainer.textContent = `${p1.sayName()} wins!`
+                displayContainer.textContent = `${jim.name} wins!`
                 gameboard.winner = displayContainer.textContent
-                return console.log(`${p1.sayName()} wins!`)
+                return console.log(`${jim.name} wins!`)
             }
         }
         // then check verticals 
         for(let i=0; i<3;i++){
             let column = [array[i],array[i+3],array[i+6]]
             if(column.every(e=>e==="X")){
-                displayContainer.textContent = `${p2.sayName()} wins!`
+                displayContainer.textContent = `${tim.name} wins!`
                 gameboard.winner = displayContainer.textContent
-                return console.log(`${p2.sayName()} wins!`)
+                return console.log(`${tim.name} wins!`)
             }
             else if(column.every(e=>e==="O")){
-                displayContainer.textContent = `${p1.sayName()} wins!`
+                displayContainer.textContent = `${jim.name} wins!`
                 gameboard.winner = displayContainer.textContent
-                return console.log(`${p1.sayName()} wins!`)
+                return console.log(`${jim.name} wins!`)
             }
         }
 
@@ -91,14 +85,14 @@ const controller = (()=>{
         let diag1 = [array[0],array[4],array[8]]
         let diag2 = [array[2],array[4],array[6]]
         if(diag1.every(e=>e==="X") || diag2.every(e=>e==="X")){
-            displayContainer.textContent = `${p2.sayName()} wins!`
+            displayContainer.textContent = `${tim.name} wins!`
             gameboard.winner = displayContainer.textContent
-            return console.log(`${p2.sayName()} wins!`)
+            return console.log(`${tim.name} wins!`)
         }
         else if(diag1.every(e=>e==="O") || diag2.every(e=>e==="O")){
-            displayContainer.textContent = `${p1.sayName()} wins!`
+            displayContainer.textContent = `${jim.name} wins!`
             gameboard.winner = displayContainer.textContent
-            return console.log(`${p1.sayName()} wins!`)
+            return console.log(`${jim.name} wins!`)
         }
         // check diagonals for draw
         if(array.includes("E")===false){
@@ -200,7 +194,7 @@ const controller = (()=>{
             jim.name=p1.value
             tim.name=p2.value
         }
-        
+
         jim.isTurn=true
         tim.isTurn=false
         controller.createBoard(jim, tim)

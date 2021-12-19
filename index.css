@@ -1,3 +1,12 @@
+.displayContainer{
+    font-size: 2rem;
+    color: rgb(213, 87, 87);
+    font-family: sans-serif;
+    font-weight: bold;
+    padding: 0% 10%;
+    text-align: center;
+}
+
 .controllersContainer{
     padding: 5% 2%;
     font-size: 1.6rem;
@@ -8,8 +17,8 @@
     width: 55%;
 }
 
-.position{
-    padding: 6% 6%;
+.square{
+    padding: 12% 12%;
 }
 
 /* borders of squares */
@@ -23,7 +32,7 @@
 }
 
 .controller{
-    padding: 8% 2% 0%;
+    padding: 3% 2% 0%;
 }
 
 .cheatDisplay{
@@ -31,10 +40,7 @@
 }
 
 .btn{
-    width: 12rem;
-    font-size: 1.4rem;
-}
-
-.startButton{
     width: 16rem;
+    font-size: 1.4rem;
+    margin-bottom: 3%;
 }
