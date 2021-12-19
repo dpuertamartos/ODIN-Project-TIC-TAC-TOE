@@ -12,6 +12,8 @@ const gameboard = {
 let tim;
 let jim;
 
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
 const controller = (()=>{
     const displayContainer = document.querySelector(".displayContainer")
     
@@ -242,12 +244,13 @@ const Player = (name1, id1) => {
 
 
 const ai = (() => {
-    const random = () => {
+    const random = async () => {
         if(gameboard.aiTurn === true && gameboard.winner.length < 1 ){
             let squares = document.querySelectorAll(".square")
             squares = Array.from(squares)
             squares = squares.filter(square => square.getAttribute("src") === "blank.png")
             const randomIndex = Math.floor(Math.random()*squares.length)
+            await delay(500)
             squares[randomIndex].click("AI")
             gameboard.aiTurn = false
         }
@@ -468,7 +471,7 @@ const ai = (() => {
         return bestMove;
     }
 
-    playBestMove = () => {
+    playBestMove = async () => {
         if(jim.isTurn){
             player="O"
             opponent="X"
@@ -483,6 +486,7 @@ const ai = (() => {
         if(gameboard.aiTurn === true && gameboard.winner.length < 1 ){
             let square = document.querySelector(`[row="${moveToPlay.row}"][col="${moveToPlay.col}"]`)
             console.log(square, "AI PLAYED")
+            await delay(300)
             square.click()
             gameboard.aiTurn = false
         }
