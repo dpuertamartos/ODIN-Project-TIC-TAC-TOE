@@ -71,9 +71,15 @@
         <div class="cheatDisplay"></div>
       </div>
     </div>
-
-
   </div>
+  <div class="copyright">David Puerta ©
+    <script>
+        let date =  new Date().getFullYear();
+        const newDate = document.createElement("span")
+        newDate.textContent = date
+        const Copyright = document.querySelector(".Copyright").append(newDate)
+    </script>
+  </div>  
   <script src="index.js">
   </script>
 </body>
