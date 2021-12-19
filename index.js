@@ -5,7 +5,8 @@ const gameboard = {
     p1Mode: "pvp",
     p2Mode: "pvp",
     aiTurn: true,
-    winner: ""
+    winner: "",
+    gamesPlayed: 0,
 }
 
 let tim;
@@ -20,29 +21,21 @@ const controller = (()=>{
         return newDiv
     }
     
-    const createNewSpan = (textContent) => {
-        const newSpan = document.createElement("span")
-        newSpan.textContent = textContent
-        return newSpan
-    }
-    
-    const createNewRow = (row, rowIndex) => {
-        const newRowDiv = createNewDiv(rowIndex)
-        for(let i=0; i<row.length; i++){
-            const newSquareSpan = createNewSpan(row[i])
-            newSquareSpan.setAttribute("row", rowIndex)
-            newSquareSpan.setAttribute("column", i)
-            newSquareSpan.className="square"
-            newRowDiv.append(newSquareSpan)
-        }
-        return newRowDiv
-    }
-    
     const createGameBoardState = () => {
         squares = document.querySelectorAll(".square")
         let array = []
         let newState = []
-        squares.forEach(square => array = array.concat(square.textContent))
+        squares.forEach(square => {
+            if(square.getAttribute("src")==="blank.png"){
+                array = array.concat("E")
+            }
+            else if(square.getAttribute("src")==="circle.png"){
+                array = array.concat("O")
+            }
+            else{
+                array = array.concat("X")
+            } 
+        })
         for(let i=0; i<array.length;i=i+3){
             let row = array.slice(i,i+3)
             newState.push(row)
@@ -54,7 +47,17 @@ const controller = (()=>{
     const gameChecker = (p1,p2) => {
         squares = document.querySelectorAll(".square")
         let array = []
-        squares.forEach(square => array = array.concat(square.textContent))
+        squares.forEach(square => {
+            if(square.getAttribute("src")==="blank.png"){
+                array = array.concat("E")
+            }
+            else if(square.getAttribute("src")==="circle.png"){
+                array = array.concat("O")
+            }
+            else{
+                array = array.concat("X")
+            } 
+        })
         // first check horizontals and verticals
         for(let i=0; i<array.length;i=i+3){
             let row = array.slice(i,i+3)
@@ -105,15 +108,6 @@ const controller = (()=>{
         }
     }
     
-    const destroyGrid = () => {
-        const container = document.querySelector(".boardContainer")
-        const body = document.querySelector("body")
-        body.removeChild(container)
-        const newContainer = document.createElement("div")
-        newContainer.className = "boardContainer"
-        const cContainer = document.querySelector(".controllersContainer")
-        body.insertBefore(newContainer, cContainer)
-    }
 
     // Passes turn if mark is created
     const passTurn = (isMarkCreated, jim, tim) => {
@@ -161,28 +155,29 @@ const controller = (()=>{
 
     // Create Board
     const createBoard = (jim, tim) => {
-        //Need to add to destroy board first
-        destroyGrid()
-        gameDiv = document.querySelector(".boardContainer")
-        gameDivNew = document.createElement("div")
         gameboard.state=gameboard.initialState
         gameboard.state.map(row=>{
-        const rowIndex = gameboard.state.indexOf(row)
-        const newRowDiv = createNewRow(row, rowIndex)
-        gameDiv.append(newRowDiv)
-        })
-        squares = document.querySelectorAll(".square")
-        squares.forEach(square=>square.addEventListener("click", ()=>{
-            if(gameboard.aiTurn === true){console.log("ai play")}
-            if(jim.isTurn){
-                const markCreated = jim.createMark(square)
-                passTurn(markCreated, jim, tim)
+            for(let i=0;i < row.length;i++){
+                const rowIndex = gameboard.state.indexOf(row)
+                const positionToChange = document.querySelector(`[row="${rowIndex}"][col="${i}"]`)
+                positionToChange.src="blank.png"
+                if(gameboard.gamesPlayed===0){
+                    positionToChange.addEventListener("click", ()=>{
+                        if(gameboard.aiTurn === true){console.log("ai play")}
+                        if(jim.isTurn){
+                            const markCreated = jim.createMark(positionToChange)
+                            passTurn(markCreated, jim, tim)
+                        }
+                        else{
+                            const markCreated = tim.createMark(positionToChange)
+                            passTurn(markCreated, jim, tim)
+                        }
+                    })
+                } 
             }
-            else{
-                const markCreated = tim.createMark(square)
-                passTurn(markCreated, jim, tim)
-            }
-        }))
+         
+    })
+    gameboard.gamesPlayed++   
     }
 
     const startGame = () => {
@@ -196,8 +191,16 @@ const controller = (()=>{
         if(gameboard.p2Mode != "pvp"){
             p2.value = gameboard.p2Mode + " AI 2"
         }
-        jim = Player(p1.value, 1)
-        tim = Player(p2.value, 2)
+
+        if(gameboard.gamesPlayed===0){
+            jim = Player(p1.value, 1)
+            tim = Player(p2.value, 2)
+        } 
+        else{
+            jim.name=p1.value
+            tim.name=p2.value
+        }
+        
         jim.isTurn=true
         tim.isTurn=false
         controller.createBoard(jim, tim)
@@ -225,16 +228,16 @@ const Player = (name1, id1) => {
     let name = name1
     const sayName = () => name1
     const changeTurn = () => isTurn = !isTurn
-    const createMark = (span) =>{
-        if(span.textContent!="E"){
+    const createMark = (img) =>{
+        if(img.getAttribute("src")!=="blank.png"){
             return false
         }
         else if(id===1){
-            span.textContent="O" 
+            img.src="circle.png" 
             return true
         }
         else{
-            span.textContent="X"
+            img.src="cross.png"
             return true
         }
     }
@@ -249,7 +252,7 @@ const ai = (() => {
         if(gameboard.aiTurn === true && gameboard.winner.length < 1 ){
             let squares = document.querySelectorAll(".square")
             squares = Array.from(squares)
-            squares = squares.filter(square => square.textContent === "E")
+            squares = squares.filter(square => square.getAttribute("src") === "blank.png")
             const randomIndex = Math.floor(Math.random()*squares.length)
             squares[randomIndex].click("AI")
             gameboard.aiTurn = false
@@ -484,7 +487,7 @@ const ai = (() => {
         const moveToPlay = findBestMove(board)
         console.log("board", board, "move to play", moveToPlay)
         if(gameboard.aiTurn === true && gameboard.winner.length < 1 ){
-            let square = document.querySelector(`[row="${moveToPlay.row}"][column="${moveToPlay.col}"]`)
+            let square = document.querySelector(`[row="${moveToPlay.row}"][col="${moveToPlay.col}"]`)
             console.log(square, "AI PLAYED")
             square.click()
             gameboard.aiTurn = false
@@ -498,9 +501,9 @@ const ai = (() => {
 
 const start = document.querySelector(".startButton")
 start.addEventListener("click", ()=>{
-    console.log("restart")
     gameboard.p1Mode = document.querySelector('input[name="mode1"]:checked').value;
     gameboard.p2Mode = document.querySelector('input[name="mode2"]:checked').value;
+    console.log("restart", gameboard.p1Mode, gameboard.p2Mode)
     controller.startGame()
 })
 
