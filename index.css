@@ -3,6 +3,25 @@
     font-size: 1.6rem;
 }
 
+.boardDisplay{
+    padding: 5% 10%;
+    width: 55%;
+}
+
+.position{
+    padding: 6% 6%;
+}
+
+/* borders of squares */
+
+.top, .mid{
+    border-bottom:  3px solid gray;
+}
+
+.left, .center{
+    border-right: 3px solid gray;
+}
+
 .controller{
     padding: 8% 2% 0%;
 }
